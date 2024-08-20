@@ -1,32 +1,55 @@
-# Markdown 轉 PDF 工具
+# Markdown 工具集
 
-這個工具可以將 Markdown 檔案轉換為 PDF 格式。
+這個工具集包含兩個主要功能：將 Markdown 轉換為 PDF，以及將 Markdown 翻譯成中英文對照版本。
 
 ## 安裝依賴
 
-在使用此工具之前，請確保已安裝所需的 Python 套件：
+在使用這些工具之前，請確保已安裝所需的 Python 套件：
 
 ```bash
-pip install markdown reportlab xhtml2pdf
+pip install markdown xhtml2pdf openai python-dotenv
 ```
 
-## 使用方法
+## 1. Markdown 轉 PDF 工具
+
+這個工具可以將 Markdown 檔案轉換為 PDF 格式。
+
+### 使用方法
 
 基本用法：
 
 ```bash
-python markdown_to_pdf.py 輸入檔案路徑 [-o 輸出檔案路徑]
+python markdown_to_pdf.py 輸入檔案路徑 [-o 輸出檔案名稱]
 ```
 
 例如：
 
 ```bash
-python markdown_to_pdf.py 文件.md -o 輸出.pdf
+python markdown_to_pdf.py 文件.md -o 輸出
 ```
 
-如果不指定輸出檔案路徑，程序會自動將 PDF 檔案保存在 `exports` 資料夾中，檔名與輸入檔案相同（副檔名改為 .pdf）。
+注意事項：
 
-## 查詢檔案完整路徑
+- 輸入檔案路徑應該是完整的路徑或相對於當前目錄的路徑。
+- 使用 `-o` 選項時，只需提供檔案名稱，不需要包含路徑或 `.pdf` 副檔名。
+- 所有生成的 PDF 檔案都會自動保存在 `exports` 資料夾中。
+- 如果不指定輸出檔案名稱，程序會使用輸入檔案的名稱（改為 .pdf 副檔名）。
+
+例如，以下命令會在 `exports` 資料夾中生成 `輸出.pdf`：
+
+```bash
+python markdown_to_pdf.py /path/to/文件.md -o 輸出
+```
+
+如果不指定輸出名稱：
+
+```bash
+python markdown_to_pdf.py /path/to/文件.md
+```
+
+這會在 `exports` 資料夾中生成 `文件.pdf`。
+
+### 查詢檔案完整路徑
 
 在 Linux 系統中，有多種方法可以查詢檔案的完整路徑：
 
@@ -70,8 +93,42 @@ echo "${BASH_SOURCE[0]}"
 
 這些命令都會顯示 `readme.md` 的完整路徑。
 
-## 注意事項
+## 2. Markdown 翻譯工具
 
-- 確保輸入檔案是有效的 Markdown 格式（.md 或 .markdown 副檔名）。
-- 如果指定的輸出目錄不存在，程序會自動創建。
-- 轉換過程中如遇到錯誤，程序會顯示相應的錯誤訊息。
+這個工具可以將英文 Markdown 文件翻譯成中英文對照的版本，並可選擇性地將結果轉換為 PDF。
+
+### 使用方法
+
+基本用法：
+
+```bash
+python markdown_translator.py 輸入檔案路徑 [-o 輸出檔案名稱] [--pdf]
+```
+
+例如：
+
+```bash
+python markdown_translator.py 文件.md -o 輸出 --pdf
+```
+
+這個命令會將 `文件.md` 翻譯成中英文對照的版本，並將結果保存為 `輸出.md` 和 `輸出.pdf`。
+
+如果不指定輸出檔案名稱，程序會使用輸入檔案的名稱（加上 `_translated` 前綴）：
+
+```bash
+python markdown_translator.py 文件.md --pdf
+```
+
+這會生成 `文件_translated.md` 和 `文件_translated.pdf`。
+
+### 注意事項
+
+- 輸入檔案路徑應該是完整的路徑或相對於當前目錄的路徑。
+- 使用 `-o` 選項時，只需提供檔案名稱，不需要包含路徑或 `.md` 副檔名。
+- 使用 `--pdf` 選項時，程序會生成 PDF 文件，並將其保存在與輸出 Markdown 文件相同的路徑中。
+- 所有生成的檔案都會自動保存在 `exports` 資料夾中。
+- 您需要在 `.env` 文件中提供 OpenAI API Key，例如：
+  ```
+  OPENAI_API_KEY=您的OpenAI_API_Key
+  ```
+  請將 `您的OpenAI_API_Key` 替換為您實際的 OpenAI API Key。

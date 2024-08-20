@@ -1,2 +1,4 @@
 *.pdf
 exports/*.md
+exports/*.pdf
+.env
