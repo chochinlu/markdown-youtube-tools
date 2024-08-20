@@ -4,15 +4,24 @@
 
 ## 安裝依賴
 
-在使用這些工具之前，請確保已安裝所需的 Python 套件：
+在使用這些工具之前，請確保已安裝所需的 Python 套件和字體：
 
-```bash
-pip install markdown xhtml2pdf openai python-dotenv
-```
+1. 安裝 Python 套件：
+   ```bash
+   pip install markdown openai python-dotenv weasyprint
+   ```
+
+2. 在 Ubuntu 上安裝 Noto Sans CJK 字體：
+   ```bash
+   sudo apt update
+   sudo apt install fonts-noto-cjk
+   ```
+
+   安裝完成後，您可能需要重新啟動應用程式或登出再登入，以確保新安裝的字體生效。
 
 ## 1. Markdown 轉 PDF 工具
 
-這個工具可以將 Markdown 檔案轉換為 PDF 格式。
+這個工具可以將 Markdown 檔案轉換為 PDF 格式，並正確支援中文顯示。
 
 ### 使用方法
 
@@ -97,6 +106,17 @@ echo "${BASH_SOURCE[0]}"
 
 這個工具可以將英文 Markdown 文件翻譯成中英文對照的版本，並可選擇性地將結果轉換為 PDF。
 
+### 使用前準備
+
+1. 創建一個名為 `.env` 的文件在專案根目錄。
+2. 在 `.env` 文件中添加您的 OpenAI API Key：
+
+   ```
+   OPENAI_API_KEY=您的OpenAI_API_Key
+   ```
+
+   請將 `您的OpenAI_API_Key` 替換為您實際的 OpenAI API Key。
+
 ### 使用方法
 
 基本用法：
@@ -127,8 +147,14 @@ python markdown_translator.py 文件.md --pdf
 - 使用 `-o` 選項時，只需提供檔案名稱，不需要包含路徑或 `.md` 副檔名。
 - 使用 `--pdf` 選項時，程序會生成 PDF 文件，並將其保存在與輸出 Markdown 文件相同的路徑中。
 - 所有生成的檔案都會自動保存在 `exports` 資料夾中。
-- 您需要在 `.env` 文件中提供 OpenAI API Key，例如：
-  ```
-  OPENAI_API_KEY=您的OpenAI_API_Key
-  ```
-  請將 `您的OpenAI_API_Key` 替換為您實際的 OpenAI API Key。
+- 確保您已在 `.env` 文件中正確設置了 OpenAI API Key。
+
+## 疑難排解
+
+如果在生成 PDF 時遇到中文顯示問題，請確保：
+
+1. 已正確安裝 Noto Sans CJK 字體。
+2. 重新啟動了終端機或系統以確保字體安裝生效。
+3. Markdown 文件使用 UTF-8 編碼保存。
+
+如果問題仍然存在，可以嘗試使用不同的中文字體，或檢查生成的 HTML 內容以進行進一步的調試。

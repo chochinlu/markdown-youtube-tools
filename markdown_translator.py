@@ -2,7 +2,7 @@ import argparse
 import os
 from openai import OpenAI
 from markdown import markdown
-from xhtml2pdf import pisa
+from weasyprint import HTML, CSS
 import dotenv
 
 # 載入 .env 檔案中的環境變數
@@ -36,13 +36,22 @@ def translate_markdown(input_file, output_file, to_pdf=False):
     if to_pdf:
         pdf_file = os.path.splitext(output_file)[0] + '.pdf'
         html_content = markdown(translated_content)
-        with open(pdf_file, 'w+b') as result_file:
-            pisa_status = pisa.CreatePDF(html_content, dest=result_file)
         
-        if pisa_status.err:
-            print("PDF 生成過程中發生錯誤。")
-        else:
-            print(f"PDF 文件已生成：{pdf_file}")
+        # 定義 CSS 樣式，包括中文字體
+        css = CSS(string='''
+            @font-face {
+                font-family: 'NotoSansCJK';
+                src: url('/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc');
+            }
+            body {
+                font-family: 'Noto Sans CJK TC', 'Noto Sans CJK SC', 'Noto Sans CJK JP', 'Noto Sans CJK KR', sans-serif;
+            }
+        ''')
+        
+        # 生成 PDF
+        HTML(string=html_content).write_pdf(pdf_file, stylesheets=[css])
+        
+        print(f"PDF 文件已生成：{pdf_file}")
 
 def main():
     parser = argparse.ArgumentParser(description='將 Markdown 文件翻譯成中英文對照版本')

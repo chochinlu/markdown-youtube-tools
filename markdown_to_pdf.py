@@ -1,7 +1,7 @@
 import argparse
 import os
 from markdown import markdown
-from xhtml2pdf import pisa
+from weasyprint import HTML, CSS
 
 def is_markdown_file(file_path):
     _, ext = os.path.splitext(file_path)
@@ -20,13 +20,21 @@ def convert_markdown_to_pdf(input_file, output_file):
     # 確保 exports 資料夾存在
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
-    with open(output_file, 'w+b') as result_file:
-        pisa_status = pisa.CreatePDF(html_content, dest=result_file)
+    # 定義 CSS 樣式，包括中文字體
+    css = CSS(string='''
+        @font-face {
+            font-family: 'Noto Sans CJK TC';
+            src: local('Noto Sans CJK TC'), local('Noto Sans CJK SC'), local('Noto Sans CJK JP'), local('Noto Sans CJK KR');
+        }
+        body {
+            font-family: 'Noto Sans CJK TC', sans-serif;
+        }
+    ''')
 
-    if pisa_status.err:
-        print("PDF 生成過程中發生錯誤。")
-    else:
-        print(f"PDF 已成功生成：{output_file}")
+    # 生成 PDF
+    HTML(string=html_content).write_pdf(output_file, stylesheets=[css])
+
+    print(f"PDF 已成功生成：{output_file}")
 
 def main():
     parser = argparse.ArgumentParser(description='將 Markdown 檔案轉換為 PDF')
