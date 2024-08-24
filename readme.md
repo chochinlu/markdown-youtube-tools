@@ -1,6 +1,6 @@
 # Markdown 工具集
 
-這個工具集包含兩個主要功能：將 Markdown 轉換為 PDF，以及將 Markdown 翻譯成中英文對照版本。
+這個工具集包含三個主要功能：將 Markdown 轉換為 PDF、將 Markdown 翻譯成中英文對照版本，以及處理 YouTube 字幕。
 
 ## 安裝依賴
 
@@ -8,7 +8,7 @@
 
 1. 安裝 Python 套件：
    ```bash
-   pip install markdown openai python-dotenv weasyprint
+   pip install markdown openai python-dotenv weasyprint youtube_transcript_api
    ```
 
 2. 在 Ubuntu 上安裝 Noto Sans CJK 字體：
@@ -148,6 +148,29 @@ python markdown_translator.py 文件.md --pdf
 - 使用 `--pdf` 選項時，程序會生成 PDF 文件，並將其保存在與輸出 Markdown 文件相同的路徑中。
 - 所有生成的檔案都會自動保存在 `exports` 資料夾中。
 - 確保您已在 `.env` 文件中正確設置了 OpenAI API Key。
+
+## 3. YouTube 字幕處理工具
+
+這個工具可以下載指定 YouTube 影片的字幕，將其轉換為 Markdown 格式，然後翻譯成中英文對照版本，最後生成 PDF 文件。
+
+### 使用方法
+
+基本用法：
+
+```bash
+python youtube_subtitle_processor.py <YouTube影片ID> [輸出檔案名稱]
+```
+
+例如：
+
+```bash
+python youtube_subtitle_processor.py dQw4w9WgXcQ 我的影片字幕
+```
+
+注意事項：
+
+- YouTube 影片 ID 是影片網址中 `v=` 後面的部分。
+- 如果無法下載字幕，程序會顯示錯誤訊息並退出。
 
 ## 疑難排解
 
